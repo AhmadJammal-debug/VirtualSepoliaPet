@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script src="creator.js" type="module"></script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Pet</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    body {
+      background-color: black;
+      color: white;
+    }
+
+    .petDetails {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .petDetails img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 999;
+    }
+
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .image-link {
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    #petDropdown {
+      appearance: none;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: #f8f8f8;
+      color: #333;
+      width: 150px;
+      animation: colorFlash 25s infinite;
+      font-family: 'Press Start 2P', cursive;
+      width: auto;
+    }
+
+    @keyframes colorFlash {
+      0% {
+        background-color: red;
+      }
+
+      25% {
+        background-color: blue;
+      }
+
+      50% {
+        background-color: green;
+      }
+
+      75% {
+        background-color: yellow;
+      }
+
+      100% {
+        background-color: orange;
+      }
+
+      75% {
+        background-color: purple;
+      }
+
+      50% {
+        background-color: green;
+      }
+
+      25% {
+        background-color: cyan;
+      }
+    }
+
+    #backgroundContainer {
+      background: no-repeat center center / cover;
+      width: 900px;
+      height: 700px;
+      position: relative;
+      left: 275px;
+      /* Move the container 50% to the right */
+      bottom: 350px;
+    }
+
+    .petCard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid white; /* Add a white border to the pet cards */
+      padding: 10px; /* Add padding to create a frame-like appearance */
+    }
+
+    .petCard img {
+      width: 200px;
+      height: auto;
+    }
+
+    #petContainer {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      top: 625px;
+      left: 975px;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    #petDropdown option {
+      padding: 5px;
+      font-size: 14px;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
+
+
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .buttons button:hover {
+      background-color: #45a049;
+    }
+
+    .buttons button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .popup h2 {
+      margin-bottom: 10px;
+      font-family: "Arial Black", sans-serif;
+      font-size: 36px;
+      color: white;
+      text-align: center;
+    }
+
+    .popup input {
+      margin-bottom: 10px;
+    }
+
+    #createPetPopup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #createPetPopup .popup-content {
+      @keyframes colorFlash {
+        0% {
+          background-color: red;
+        }
+
+        25% {
+          background-color: blue;
+        }
+
+        50% {
+          background-color: green;
+        }
+
+        75% {
+          background-color: yellow;
+        }
+
+        100% {
+          background-color: orange;
+        }
+
+        75% {
+          background-color: purple;
+        }
+
+        50% {
+          background-color: green;
+        }
+
+        25% {
+          background-color: cyan;
+        }
+      }
+
+      body {
+        animation: colorFlash 50s infinite;
+      }
+
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* Added CSS for the gifs and their alignment */
+.gif-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gif-pet-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+}
+
+
+    .gif {
+      width: 100%;
+      height: auto;
+    }
+    .text-box {
+      text-align: center;
+      margin-top: 30px;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    .pet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%; /* Increase the value to make the pets bigger */
+  max-height: 90%; /* Increase the value to make the pets bigger */
+}
+
+  </style>
+
+</head>
+
+<body>
+<div class="gif-container">
+  <div class="gif-pet-container">
+    <img src="red.gif" alt="Red Gif" class="gif">
+    <img src="" alt="Pet" class="pet">
+  </div>
+  <div class="gif-pet-container">
+    <img src="blue.gif" alt="Blue Gif" class="gif">
+    <img src="" alt="Pet" class="pet">
+  </div>
+  <div class="gif-pet-container">
+    <img src="green.gif" alt="Green Gif" class="gif">
+    <img src="" alt="Pet" class="pet">
+  </div>
+</div>
+
+    <div>
+    <a href="index.html">
+  <img src="result.gif" alt="Clickable Gif">
+</a>
+
+      
+    </div>
+  </div>
+      <div class="text-box">
+      <input type="text" id="petNameInput" placeholder="Enter pet name">
+      <button id="createPetButton">Create Pet</button>
+      
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

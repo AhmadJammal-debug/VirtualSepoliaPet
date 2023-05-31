@@ -1,0 +1,652 @@
+const contractAddress = "0xFB21b30Bf594e517cc3805271f0DB4cd96382653"; // Replace with your actual contract address
+
+// Contract ABI
+const contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "createPet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "feedPet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "PetCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newHunger",
+				"type": "uint256"
+			}
+		],
+		"name": "PetFed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newLevel",
+				"type": "uint256"
+			}
+		],
+		"name": "PetLeveledUp",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newHappiness",
+				"type": "uint256"
+			}
+		],
+		"name": "PetPlayed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "PetTraded",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "playWithPet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "tradePet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getHappinessLevel",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getHungerLevel",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getOwnedPetCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getOwnedPetHappiness",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getOwnedPetHunger",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getOwnedPetLevel",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getOwnedPetName",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getOwnedPets",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPet",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "petId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPetDetails",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+async function loadPets() {
+ for (let i = 0; i < petCount; i++) {
+  const pet = await contract.methods.getOwnedPet(i).call({ from: ethereum.selectedAddress });
+  const petId = pet.id;
+  const petName = pet.name;
+
+  const option = document.createElement("option");
+  option.value = petId;
+  option.text = petName;
+  petDropdown.appendChild(option);
+}
+}
+
+// Rest of the code...
+
+
+let contractInstance
+contractInstance = new web3.eth.Contract(contractABI, contractAddress);
+
+async function createPet() {
+  const petName = prompt("Enter the name of your pet:");
+  if (petName) {
+    try {
+      await contract.methods.createPet(petName).send({ from: ethereum.selectedAddress });
+      loadPets();
+      loadPetDetails(petName);
+    } catch (error) {
+      console.error("Error creating pet:", error);
+    }
+  }
+}
+
+// Rest of the code...
+
+
+
+// Web3 initialization
+window.web3 = new Web3(window.ethereum);
+window.ethereum.enable();
+
+// Contract instance
+const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// Function to create a pet
+async function createPet() {
+  const petName = prompt("Enter the name of your pet:");
+  if (petName) {
+    try {
+      await contract.methods.createPet(petName).send({ from: ethereum.selectedAddress });
+      loadPets();
+      loadPetDetails(petName);
+    } catch (error) {
+      console.error("Error creating pet:", error);
+    }
+  }
+}
+
+
+// Function to load pet details
+// Function to handle create pet button click
+function handleCreatePet() {
+  // Show the create pet popup
+  const createPetPopup = document.getElementById("createPetPopup");
+  createPetPopup.style.display = "block";
+}
+
+async function handleCreatePetForm(event) {
+  event.preventDefault();
+
+  try {
+    // Get the pet name from the form input
+    const petNameInput = document.getElementById("petNameInput");
+    const petName = petNameInput.value.trim();
+
+    // Check if the pet name is valid
+    if (petName === "") {
+      alert("Please enter a valid pet name.");
+      return;
+    }
+
+    // Create the pet
+    await contractInstance.methods.createPet(petName).send({ from: YOUR_METAMASK_ADDRESS });
+
+    // Hide the create pet popup
+    const createPetPopup = document.getElementById("createPetPopup");
+    createPetPopup.style.display = "none";
+
+    // Reload the pet dropdown menu
+    loadPetDropdown();
+  } catch (error) {
+    console.error("Error creating pet:", error);
+  }
+}
+// Function to load pet details
+async function loadPetDetails(petId) {
+  try {
+    // Create contract instance
+    
+
+    // Get pet details
+    const petDetails = await contractInstance.methods.getPet(petId).call();
+    const [petName, age, hunger, happiness, level] = petDetails;
+
+    // Update pet details on the page
+    document.getElementById("petName").textContent = "Name: " + petName;
+    document.getElementById("petHunger").textContent = "Hunger: " + hunger;
+    document.getElementById("petHappiness").textContent = "Happiness: " + happiness;
+    document.getElementById("petLevel").textContent = "Level: " + level;
+  } catch (error) {
+    console.error("Error loading pet details:", error);
+  }
+}
+
+async function loadPetDropdown() {
+  try {
+    // Clear the existing options
+    const petDropdown = document.getElementById("petDropdown");
+    petDropdown.innerHTML = "";
+
+    // Get the owned pet count from the contract
+    const ownedPetCount = await contractInstance.methods.getOwnedPetCount().call({ from: ethereum.selectedAddress });
+
+    // Create the dropdown options dynamically
+    for (let i = 0; i < ownedPetCount; i++) {
+      const petId = await contractInstance.methods.getOwnedPets(i).call({ from: ethereum.selectedAddress });
+      const petName = await contractInstance.methods.getOwnedPetName(petId).call({ from: ethereum.selectedAddress });
+
+      const option = document.createElement("option");
+      option.value = petId;
+      option.text = petName;
+
+      petDropdown.appendChild(option);
+    }
+  } catch (error) {
+    console.error("Error loading pet dropdown:", error);
+  }
+}
+async function displayPetDetails(petId) {
+  try {
+    const pet = await contractInstance.getPet(petId);
+    document.getElementById("petName").textContent = "Name: " + pet[0];
+    document.getElementById("petHunger").textContent = "Hunger: " + pet[2];
+    document.getElementById("petHappiness").textContent = "Happiness: " + pet[3];
+    document.getElementById("petLevel").textContent = "Level: " + pet[4];
+  } catch (error) {
+    console.error("Error displaying pet details:", error);
+  }
+}
+
+
+
+async function selectPet() {
+  const petId = document.getElementById("petDropdown").value;
+  await displayPetDetails(petId);
+}
+
+// Call the initialization function
+initApp();
+
+
+
+
+// Function to feed the pet
+async function feedPet() {
+  // Call the contract's feedPet method
+  await contract.methods.feedPet().send({ from: ethereum.selectedAddress });
+
+  // Refresh the page to update the pet details
+  location.reload();
+}
+
+// Function to play with the pet
+async function playWithPet() {
+  // Call the contract's playWithPet method
+  await contract.methods.playWithPet().send({ from: ethereum.selectedAddress });
+
+  // Refresh the page to update the pet details
+  location.reload();
+}
+
+// Function to enable buttons and other functionalities
+function enableButtons() {
+  // Enable the feed button
+  document.getElementById("feedButton").disabled = false;
+
+  // Enable the play button
+  document.getElementById("playButton").disabled = false;
+}
+
+// Function to initialize the app
+async function initApp() {
+  // Check if the user has already created a pet
+  const petCount = await contract.methods.getOwnedPets().call();
+  const petCountDisplay = document.getElementById("petCount");
+  petCountDisplay.innerText = petCount.length;
+  if (petCount === "0") {
+    // No pets found, display a message to create a pet
+    document.getElementById("noPetsMessage").style.display = "block";
+    return;
+  }
+
+  // Pet found, continue with the initialization
+  await loadPetDetails(0);
+  enableButtons();
+
+  // Add event listener for the "Create Pet" button
+  document.getElementById("createPetButton").addEventListener("click", handleCreatePet);
+}
+
+async function handleCreatePet() {
+  // Show the create pet form
+  document.getElementById("createPetPopup").style.display = "block";
+
+  // Call the initialization function
+  await init();
+}
+
+window.onload = async function() {
+  const petCount = await contract.methods.getOwnedPetCount().call();
+  if (petCount === '0') {
+    document.getElementById("createPetPopup").style.display = "block";
+  } else {
+    document.getElementById("createPetPopup").style.display = "none";
+  }
+};
+
+loadPetDropdown()
+const createPetForm = document.getElementById("createPetPopup");
+createPetForm.addEventListener("submit", handleCreatePetForm);
+// Event listener for the create button
+document.getElementById("createPetButton").addEventListener("click", createPet);
+
+// Event listener for the feed button
+document.getElementById("feedButton").addEventListener("click", feedPet);
+
+// Event listener for the play button
+document.getElementById("playButton").addEventListener("click", playWithPet);
+
+// Call initApp when the page has finished loading
+window.addEventListener("load", async function () {
+  // Request account access from the user
+  await ethereum.enable();
+
+  // Initialize the app
+  await initApp();
+});
+

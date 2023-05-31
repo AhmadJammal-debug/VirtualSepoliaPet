@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="app.js" type="module"></script>
+  <script src="pet.js" type="module"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Pet</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-family: 'Press Start 2P', Arial, sans-serif;
+    }
+
+    body {
+      background-color: black;
+      color: white;
+    }
+
+    .petDetails {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .petDetails img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 999;
+    }
+
+    .popup-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .image-link {
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    #petDropdown {
+      appearance: none;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: #f8f8f8;
+      color: #333;
+      width: 150px;
+      animation: colorFlash 25s infinite;
+      font-family: 'Press Start 2P', cursive;
+      width: auto;
+    }
+
+    @keyframes colorFlash {
+      0% {
+        background-color: red;
+      }
+
+      25% {
+        background-color: blue;
+      }
+
+      50% {
+        background-color: green;
+      }
+
+      75% {
+        background-color: yellow;
+      }
+
+      100% {
+        background-color: orange;
+      }
+
+      75% {
+        background-color: purple;
+      }
+
+      50% {
+        background-color: green;
+      }
+
+      25% {
+        background-color: cyan;
+      }
+    }
+
+    #backgroundContainer {
+      background: no-repeat center center / cover;
+      width: 900px;
+      height: 700px;
+      position: relative;
+      left: 275px;
+      /* Move the container 50% to the right */
+      bottom: 350px;
+    }
+
+    .petCard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .petCard img {
+      width: 200px;
+      height: auto;
+    }
+
+    #petContainer {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      top: 625px;
+      left: 975px;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    #petDropdown option {
+      padding: 5px;
+      font-size: 14px;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
+
+
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .buttons button:hover {
+      background-color: #45a049;
+    }
+
+    .buttons button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .popup h2 {
+      margin-bottom: 10px;
+      font-family: "Arial Black", sans-serif;
+      font-size: 36px;
+      color: white;
+      text-align: center;
+    }
+
+    .popup input {
+      margin-bottom: 10px;
+    }
+
+    #createPetPopup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #createPetPopup .popup-content {
+      @keyframes colorFlash {
+        0% {
+          background-color: red;
+        }
+
+        25% {
+          background-color: blue;
+        }
+
+        50% {
+          background-color: green;
+        }
+
+        75% {
+          background-color: yellow;
+        }
+
+        100% {
+          background-color: orange;
+        }
+
+        75% {
+          background-color: purple;
+        }
+
+        50% {
+          background-color: green;
+        }
+
+        25% {
+          background-color: cyan;
+        }
+      }
+
+      body {
+        animation: colorFlash 50s infinite;
+      }
+
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a target="_top" href="https://flamingtext.com/"><img src="https://blog.flamingtext.com/blog/2023/05/19/flamingtext_com_1684528195_47661225.gif" border="0" alt="Logo Design by FlamingText.com" title="Logo Design by FlamingText.com"></a></h1>
+
+  <div id="petSelection">
+    <h2><a target="_top" href="https://flamingtext.com/"><img src="https://blog.flamingtext.com/blog/2023/05/19/flamingtext_com_1684529040_47661227.gif" border="0" alt="Logo Design by FlamingText.com" title="Logo Design by FlamingText.com"></a></h2> </div>
+    <script> console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"); </script>
+    <select id="petDropdown">
+    </select>
+    
+  <div id="petDetails">
+    <h2>Pet Details</h2>
+    <p id="petName"></p>
+    <p id="petHunger"></p>
+    <p id="petHappiness"></p>
+    <p id="petLevel"></p>
+    <p id="petPrice"></p>
+    <div class="container">
+      <div class="buttons">
+        <button id="feedButton" disabled>Feed</button>
+        <button id="playButton" onclick="playWithPet()" disabled>Play</button>
+        <button id="levelUpButton" onclick="levelUpPet()" disabled>Level Up</button>
+         <a href="creator.html">
+  <img src="result1.gif" alt="Clickable Gif">
+</a>
+
+         <a href="sub.html">
+  <img src="result2.gif" alt="Clickable Gif">
+</a>
+
+      </div>
+      <div class="petDetails">
+        <div id="petContainer">
+          <img id="petGif" alt="Pet GIF">
+        </div>
+        <div id="backgroundContainer"></div>
+     
+      </div>
+    </div>
+  </div>
+
+  <div id="createPetPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+      <a target="_top" href="https://flamingtext.com/"><img src="https://blog.flamingtext.com/blog/2023/05/19/flamingtext_com_1684524881_47661222.gif" border="0" alt="Logo Design by FlamingText.com" title="Logo Design by FlamingText.com"></a>
+      <input type="text" id="petNameInput1" placeholder="Enter pet name">
+      <button id="createPetButton1">Create Pet</button>
+    </div>
+  </div>
+
+  <div id="tradeArea">
+    <h2>Trade Area</h2>
+    <input type="text" id="tradeAddressInput" placeholder="Enter recipient's address">
+    <select id="petTradeDropdown"></select>
+    <button id="tradeButton">Trade Pet</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script src="app.js" type="module"></script>
+  <script src="pet.js" type="module"></script>
+
+</body>
+
+</html>
