@@ -7,6 +7,8 @@ import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 import "./Price.sol";
 
 //Please Visit https://vrf.chain.link/ and choose the subscription model and top up your account for this code to work.
+//Please Don't forget to add the ABI and contract address to your front end
+//Please Don't foget to add your contract as a consumer in your VRF subscription 
 contract VirtualPet is VRFConsumerBaseV2, ConfirmedOwner{
 
 event RequestSent(uint256 requestId, uint32 numWords);
